@@ -54,7 +54,7 @@ function FoodDetails(props) {
             tailwind`bg-slate-100 p-2 rounded-full absolute`,
             {top: responsiveWidth(12), left: responsiveWidth(6), zIndex: 100},
           ]}>
-          <ArrowUturnLeftIcon size={responsiveHeight(3.5)} color={'#000'} />
+          <ArrowUturnLeftIcon size={responsiveHeight(3.5)} color={'#f59e0b'} />
         </TouchableOpacity>
 
         <Animated.Image
