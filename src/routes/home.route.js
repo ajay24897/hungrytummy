@@ -3,7 +3,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import FoodDetails from '../screens/foodDetails';
 import HomeScreen from '../screens/home';
 
-function homeRoute() {
+function HomeRoute() {
   const Stack = createNativeStackNavigator();
 
   return (
@@ -22,4 +22,4 @@ function homeRoute() {
   );
 }
 
-export default homeRoute;
+export default HomeRoute;
