@@ -1,5 +1,5 @@
 import {View, Text, TouchableOpacity} from 'react-native';
-import React from 'react';
+import React, {memo} from 'react';
 import tailwind from 'twrnc';
 import {Bars3Icon} from 'react-native-heroicons/solid';
 import {ShoppingCartIcon} from 'react-native-heroicons/outline';
@@ -27,4 +27,4 @@ function Navbar({navigation}) {
   );
 }
 
-export default Navbar;
+export default memo(Navbar);
