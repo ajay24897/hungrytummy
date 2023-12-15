@@ -1,7 +1,5 @@
-import {View, Text, TouchableOpacity, ActivityIndicator} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import axios from 'axios';
-import {FlatList} from 'react-native-gesture-handler';
+import {TouchableOpacity} from 'react-native';
+import React from 'react';
 import {
   responsiveHeight,
   responsiveWidth,
@@ -31,7 +29,7 @@ export default function MasonryLayout({
             entering={FadeInDown.delay(i * 150)}
             source={{uri: item?.strMealThumb}}
             style={[
-              tailwind`rounded-2xl`,
+              tailwind`rounded-2xl bg-zinc-300`,
               {
                 width: responsiveWidth(46),
                 height:

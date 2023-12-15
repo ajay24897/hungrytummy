@@ -1,6 +1,13 @@
-import {Modal, TextInput, TouchableOpacity, View, Text} from 'react-native';
+import {
+  Modal,
+  TextInput,
+  TouchableOpacity,
+  View,
+  Text,
+  ActivityIndicator,
+} from 'react-native';
 import React, {useState} from 'react';
-import tailwind, {style} from 'twrnc';
+import tailwind from 'twrnc';
 import {MagnifyingGlassIcon, XMarkIcon} from 'react-native-heroicons/solid';
 import {responsiveHeight} from 'react-native-responsive-dimensions';
 import axios from 'axios';
@@ -12,6 +19,10 @@ export default function SearchMeal({navigation}) {
   const [seachText, setSeachText] = useState('');
   const [meals, setMeals] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [loadingStatus, setLoadingStatus] = useState({
+    loading: false,
+    hasLoadedOnce: false,
+  });
 
   const insets = useSafeAreaInsets();
 
@@ -26,13 +37,18 @@ export default function SearchMeal({navigation}) {
       console.log('seachText', seachText);
       setMeals([]);
       try {
+        setLoadingStatus({loading: true, hasLoadedOnce: true});
         const res = await axios.get(
           `https://www.themealdb.com/api/json/v1/1/search.php?s=${seachText}`,
         );
         console.log(res.data);
-        setMeals(res.data.meals);
+        setMeals(res.data.meals ?? []);
+        setLoadingStatus({loading: false, hasLoadedOnce: true});
       } catch {
-        error => console.log(error);
+        error => {
+          console.log(error);
+          setLoadingStatus({loading: false, hasLoadedOnce: true});
+        };
       }
     } else {
       setMeals([]);
@@ -78,13 +94,22 @@ export default function SearchMeal({navigation}) {
               <MagnifyingGlassIcon color={'#000'} size={responsiveHeight(4)} />
             </TouchableOpacity>
           </View>
-          {meals.length > 0 && (
+          {meals?.length > 0 && (
             <MasonryLayout
               meals={meals}
               navigation={navigation}
               animationType="slide"
               onPressMeal={() => setShowModal(false)}
             />
+          )}
+          {loadingStatus.loading && <ActivityIndicator />}
+
+          {!meals?.length &&
+            !loadingStatus.loading &&
+            loadingStatus.hasLoadedOnce && <Text>No Meal found</Text>}
+
+          {!meals?.length && !loadingStatus.hasLoadedOnce && (
+            <Text>Search Meal</Text>
           )}
         </View>
       </Modal>

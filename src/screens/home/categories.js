@@ -2,13 +2,9 @@ import {View, Text, TouchableOpacity, ActivityIndicator} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import {FlatList} from 'react-native-gesture-handler';
-import {
-  responsiveHeight,
-  responsiveWidth,
-} from 'react-native-responsive-dimensions';
+import {responsiveWidth} from 'react-native-responsive-dimensions';
 import tailwind from 'twrnc';
 import Animated, {FadeInDown, FadeInUp} from 'react-native-reanimated';
-import Masonry from '@react-native-seoul/masonry-list';
 import MasonryLayout from '../../components/masonryLayout';
 
 function Categories({navigation}) {
@@ -42,7 +38,7 @@ function Categories({navigation}) {
         `https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`,
       );
       fetchCategories();
-      setMeals([...res.data.meals]);
+      setMeals(res.data.meals ?? []);
       setIsLoading(false);
     } catch {
       err => {
