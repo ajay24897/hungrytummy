@@ -34,19 +34,16 @@ export default function SearchMeal({navigation}) {
 
   async function searchMealData() {
     if (seachText?.trim().length > 0) {
-      console.log('seachText', seachText);
       setMeals([]);
       try {
         setLoadingStatus({loading: true, hasLoadedOnce: true});
         const res = await axios.get(
           `https://www.themealdb.com/api/json/v1/1/search.php?s=${seachText}`,
         );
-        console.log(res.data);
         setMeals(res.data.meals ?? []);
         setLoadingStatus({loading: false, hasLoadedOnce: true});
       } catch {
         error => {
-          console.log(error);
           setLoadingStatus({loading: false, hasLoadedOnce: true});
         };
       }
@@ -71,7 +68,7 @@ export default function SearchMeal({navigation}) {
         <Modal visible={showModal} transparent={true}>
           <View
             style={[
-              tailwind`flex-1 mt-${insets.top}px bg-white shadow-xl`,
+              tailwind`flex-1 mt-${insets.top}px bg-white shadow-xl px-2`,
               {borderRadius: responsiveHeight(5)},
             ]}>
             <TouchableOpacity

@@ -21,9 +21,9 @@ import {
 } from 'react-native-heroicons/solid';
 
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function FoodDetails(props) {
-  console.log('props', props.route.params);
   const {strMealThumb, strMeal, idMeal} = props.route.params;
   const [mealDetails, setMealDetails] = useState({});
 
@@ -37,17 +37,35 @@ function FoodDetails(props) {
         `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${idMeal}`,
       );
       setMealDetails(res.data.meals[0]);
-      console.log(res.data.meals[0]);
     } catch {
       err => console.log(err);
+    }
+  }
+
+  async function handleAddToCart() {
+    const value = await AsyncStorage.getItem('cart');
+
+    let cartdetails = value ? JSON.parse(value) : [];
+    cartdetails.push({
+      strMealThumb,
+      strMeal,
+      idMeal,
+      count: 1,
+      price: '₹' + (+idMeal.slice(-1) + 2) * 100,
+    });
+
+    try {
+      await AsyncStorage.setItem('cart', JSON.stringify(cartdetails));
+    } catch (e) {
+      console.log(e);
+      // saving error
     }
   }
   return (
     <>
       <ScrollView
         style={[tailwind`flex-1`]}
-        showsVerticalScrollIndicator={false}
-        style={{width: '100%'}}>
+        showsVerticalScrollIndicator={false}>
         <TouchableOpacity
           onPress={() => props.navigation.goBack()}
           style={[
@@ -93,7 +111,7 @@ function FoodDetails(props) {
               <Text style={tailwind` text-xl font-bold mt-2`}>
                 {(+idMeal.slice(-1) + 1) * 10}
               </Text>
-              <Text style={tailwind`text-md mb-2`}>Minutes</Text>
+              <Text style={tailwind`text-sm mb-2`}>Minutes</Text>
             </Animated.View>
 
             <Animated.View
@@ -105,7 +123,7 @@ function FoodDetails(props) {
               <Text style={tailwind` text-xl font-bold mt-2`}>
                 {Math.floor(Math.random() * (5 - 3 + 1)) + 3} / 5
               </Text>
-              <Text style={tailwind`text-md mb-2`}>Ratting</Text>
+              <Text style={tailwind`text-sm mb-2`}>Ratting</Text>
             </Animated.View>
 
             <Animated.View
@@ -117,7 +135,7 @@ function FoodDetails(props) {
               <Text style={tailwind` text-xl font-bold mt-2`}>
                 {Math.round(idMeal.slice(-1) / 4) + 1}
               </Text>
-              <Text style={tailwind`text-md mb-2`}>Serving</Text>
+              <Text style={tailwind`text-sm mb-2`}>Serving</Text>
             </Animated.View>
 
             <Animated.View
@@ -129,7 +147,7 @@ function FoodDetails(props) {
               <Text style={tailwind` text-xl font-bold mt-2`}>
                 {idMeal.slice(-2) * 10}
               </Text>
-              <Text style={tailwind`text-md mb-2`}>Calories</Text>
+              <Text style={tailwind`text-sm mb-2`}>Calories</Text>
             </Animated.View>
           </View>
           <View style={tailwind`mx-4`}>
@@ -145,9 +163,8 @@ function FoodDetails(props) {
                     mealDetails[`strIngredient${i + 1}`] && (
                       <Animated.View
                         style={tailwind`flex flex-row`}
-                        entering={FadeInLeft.delay((6 + i) * 100).duration(
-                          500,
-                        )}>
+                        entering={FadeInLeft.delay((6 + i) * 100).duration(500)}
+                        key={i}>
                         <Text style={[tailwind`text-lg`]}>{' - '}</Text>
                         <Text style={[tailwind`text-lg`, {flex: 1}]}>
                           {mealDetails[`strIngredient${i + 1}`]}
@@ -169,7 +186,8 @@ function FoodDetails(props) {
           style={[
             tailwind`py-4 mb-5 text-center bg-amber-400 mx-auto rounded-full mt-2`,
             {width: '70%'},
-          ]}>
+          ]}
+          onPress={handleAddToCart}>
           <Text
             style={[
               tailwind`text-center  font-medium`,

@@ -24,7 +24,6 @@ function Categories({navigation}) {
         'https://www.themealdb.com/api/json/v1/1/categories.php',
       );
       setCategories([...res.data.categories]);
-      //   console.log('res', res.data.categories);
     } catch {
       error => console.log(error);
     }
@@ -55,6 +54,7 @@ function Categories({navigation}) {
           data={categories}
           showsHorizontalScrollIndicator={false}
           horizontal
+          keyExtractor={item => item.strCategory}
           renderItem={({item}) => (
             <TouchableOpacity
               style={[tailwind`flex justify-center items-center mx-1`]}

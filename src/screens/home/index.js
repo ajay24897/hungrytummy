@@ -10,22 +10,11 @@ import SearchMeal from './searchMeal';
 function HomeScreen(props) {
   const insets = useSafeAreaInsets();
   return (
-    <View style={tw`flex-1 mt-${insets.top}px`}>
+    <View style={tw`flex-1 mt-${insets.top}px mx-2`}>
       <StatusBar barStyle="dark-content" />
       <Navbar {...props} />
       <SearchMeal navigation={props.navigation} />
-
-      {/* <ScrollView style={tw`flex-1`}> */}
-      <View style={tw`flex-1`}>
-        <Categories navigation={props.navigation} />
-        {/* <Text>Home Screen</Text>
-          <Button
-            onPress={() => props.navigation.navigate('FoodDetails')}
-            title="View Details"
-          />
-          <Button title="Menu" onPress={() => props.navigation.openDrawer()} /> */}
-      </View>
-      {/* </ScrollView> */}
+      <Categories navigation={props.navigation} />
     </View>
   );
 }
