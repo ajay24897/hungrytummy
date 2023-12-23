@@ -51,7 +51,7 @@ function FoodDetails(props) {
       strMeal,
       idMeal,
       count: 1,
-      price: '₹' + (+idMeal.slice(-1) + 2) * 100,
+      price: (+idMeal.slice(-1) + 2) * 100,
     });
 
     try {
