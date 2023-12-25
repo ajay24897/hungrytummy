@@ -24,6 +24,8 @@ export default function SearchMeal({navigation}) {
     loading: false,
     hasLoadedOnce: false,
   });
+  const [searchedMeal, setSearchedMeal] = useState('');
+  const [error, setError] = useState('');
 
   const insets = useSafeAreaInsets();
 
@@ -34,8 +36,10 @@ export default function SearchMeal({navigation}) {
   });
 
   async function searchMealData() {
-    if (seachText?.trim().length > 0) {
+    if (seachText?.trim()?.length > 0) {
+      setError('');
       setMeals([]);
+      setSearchedMeal(seachText);
       try {
         setLoadingStatus({loading: true, hasLoadedOnce: true});
         const res = await axios.get(
@@ -49,9 +53,20 @@ export default function SearchMeal({navigation}) {
         };
       }
     } else {
-      setMeals([]);
+      // setSearchedMeal('');
+      setError('Please enter the meal or ingrediants');
+      // setMeals([]);
     }
   }
+
+  function handleClose() {
+    setMeals([]);
+    setSeachText('');
+    setShowModal(false);
+    setLoadingStatus({});
+    setError('');
+  }
+
   return (
     <>
       <Text style={[tailwind`mx-2 font-bold text-xl`]}>Are you Hungry?</Text>
@@ -75,12 +90,7 @@ export default function SearchMeal({navigation}) {
               {borderRadius: responsiveHeight(5)},
             ]}>
             <TouchableOpacity
-              onPress={() => {
-                setMeals([]);
-                setSeachText('');
-                setShowModal(false);
-                setLoadingStatus({});
-              }}
+              onPress={handleClose}
               style={tailwind`mt-5 ml-auto mr-5`}>
               <XMarkIcon size={responsiveHeight(3)} color={'#000'} />
             </TouchableOpacity>
@@ -101,13 +111,34 @@ export default function SearchMeal({navigation}) {
                 />
               </TouchableOpacity>
             </View>
+            {error?.length > 0 && (
+              <Text style={[tailwind`text-red-500 mx-2`]}>{error}</Text>
+            )}
+            {!meals?.length &&
+              !loadingStatus.loading &&
+              loadingStatus.hasLoadedOnce && (
+                <Text style={[tailwind`text-lg my-2`]} numberOfLines={1}>
+                  No results for{' '}
+                  <Text style={[tailwind`text-lg my-2 text-amber-500`]}>
+                    {searchedMeal}
+                  </Text>
+                </Text>
+              )}
             {meals?.length > 0 && (
-              <MasonryLayout
-                meals={meals}
-                navigation={navigation}
-                animationType="slide"
-                onPressMeal={() => setShowModal(false)}
-              />
+              <>
+                <Text style={[tailwind`text-lg my-2`]} numberOfLines={1}>
+                  Result for{' '}
+                  <Text style={[tailwind`text-lg my-2 text-amber-500`]}>
+                    {searchedMeal}
+                  </Text>
+                </Text>
+                <MasonryLayout
+                  meals={meals}
+                  navigation={navigation}
+                  animationType="slide"
+                  onPressMeal={() => setShowModal(false)}
+                />
+              </>
             )}
             {loadingStatus.loading && <ActivityIndicator />}
 
@@ -127,9 +158,9 @@ export default function SearchMeal({navigation}) {
                   />
                   <Text
                     style={[
-                      tailwind`mt-10 text-2xl text-center text-amber-400`,
+                      tailwind`mt-10 text-2xl text-center text-amber-400 font-bold`,
                     ]}>
-                    Hmm No Meal found
+                    Oh, Meal not found
                   </Text>
                   <Text style={[tailwind`mt-2 text-lg text-center `]}>
                     Load up your tummy with yummy meals 😋
