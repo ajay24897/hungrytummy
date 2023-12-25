@@ -11,6 +11,7 @@ import Header from '../../components/header';
 import Animated, {FadeInDown, FadeInUp} from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {MinusIcon, PlusIcon, TrashIcon} from 'react-native-heroicons/solid';
+import LottieView from 'lottie-react-native';
 
 export default function Cart(props) {
   const insets = useSafeAreaInsets();
@@ -62,64 +63,84 @@ export default function Cart(props) {
           title={'Cart'}
           onPressMenu={() => props.navigation.openDrawer()}
         />
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          style={[{flex: 1}]}
-          data={cartData}
-          // keyExtractor={item => item.strMealThumb}
-          renderItem={({item, index}) => (
-            <View style={tailwind`flex-row my-3`} key={index}>
-              <TouchableOpacity
-                onPress={() =>
-                  props.navigation.navigate('FoodDetails', {...item})
-                }>
-                <Image
-                  resizeMode="contain"
-                  source={{uri: item.strMealThumb}}
-                  style={[
-                    {
-                      width: responsiveWidth(25),
-                      height: responsiveWidth(25),
-                      borderRadius: responsiveWidth(5),
-                    },
-                  ]}
-                />
-              </TouchableOpacity>
-              <View style={{flex: 1}}>
-                <Text style={tailwind`ml-4 text-lg`} numberOfLines={1}>
-                  {item.strMeal}
-                </Text>
-                <Text style={tailwind`ml-4 text-lg`}>₹{item.price}</Text>
-                <View style={tailwind`flex-row ml-4 items-center mt-2`}>
-                  <TouchableOpacity
-                    style={tailwind`bg-amber-300 p-1 rounded-lg`}
-                    onPress={() =>
-                      updateItem(index, item.count === 1 ? 1 : item.count - 1)
-                    }>
-                    <MinusIcon size={responsiveHeight(3)} color={'#fff'} />
-                  </TouchableOpacity>
-                  <Text style={tailwind`mx-4 text-lg`}>{item.count}</Text>
-                  <TouchableOpacity
-                    style={tailwind`bg-amber-400 p-1 rounded-lg`}
-                    onPress={() =>
-                      updateItem(index, item.count < 10 ? item.count + 1 : 10)
-                    }>
-                    <PlusIcon size={responsiveHeight(3)} color={'#fff'} />
-                  </TouchableOpacity>
+        {cartData?.length === 0 ? (
+          <View style={[tailwind`flex items-center justify-center`, {flex: 1}]}>
+            <LottieView
+              source={require('../../assets/lottie/cat.json')}
+              autoPlay
+              loop
+              style={{width: '100%', height: responsiveHeight(30)}}
+            />
+            <Text
+              style={[
+                tailwind`mt-10 text-2xl text-center text-amber-400 font-bold`,
+              ]}>
+              Your cart is empty
+            </Text>
+            <Text style={[tailwind`mt-2 text-lg text-center `]}>
+              Let's have delicious meals 😋
+            </Text>
+          </View>
+        ) : (
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            style={[{flex: 1}]}
+            data={cartData}
+            // keyExtractor={item => item.strMealThumb}
+            renderItem={({item, index}) => (
+              <View style={tailwind`flex-row my-3`} key={index}>
+                <TouchableOpacity
+                  onPress={() =>
+                    props.navigation.navigate('FoodDetails', {...item})
+                  }>
+                  <Image
+                    resizeMode="contain"
+                    source={{uri: item.strMealThumb}}
+                    style={[
+                      {
+                        width: responsiveWidth(25),
+                        height: responsiveWidth(25),
+                        borderRadius: responsiveWidth(5),
+                      },
+                    ]}
+                  />
+                </TouchableOpacity>
+                <View style={{flex: 1}}>
+                  <Text style={tailwind`ml-4 text-lg`} numberOfLines={1}>
+                    {item.strMeal}
+                  </Text>
+                  <Text style={tailwind`ml-4 text-lg`}>₹{item.price}</Text>
+                  <View style={tailwind`flex-row ml-4 items-center mt-2`}>
+                    <TouchableOpacity
+                      style={tailwind`bg-amber-300 p-1 rounded-lg`}
+                      onPress={() =>
+                        updateItem(index, item.count === 1 ? 1 : item.count - 1)
+                      }>
+                      <MinusIcon size={responsiveHeight(3)} color={'#fff'} />
+                    </TouchableOpacity>
+                    <Text style={tailwind`mx-4 text-lg`}>{item.count}</Text>
+                    <TouchableOpacity
+                      style={tailwind`bg-amber-400 p-1 rounded-lg`}
+                      onPress={() =>
+                        updateItem(index, item.count < 10 ? item.count + 1 : 10)
+                      }>
+                      <PlusIcon size={responsiveHeight(3)} color={'#fff'} />
+                    </TouchableOpacity>
 
-                  <TouchableOpacity
-                    style={tailwind`ml-auto`}
-                    onPress={() => removeItem(index)}>
-                    <TrashIcon
-                      size={responsiveHeight(3)}
-                      color={'rgb(64 64 64)'}
-                    />
-                  </TouchableOpacity>
+                    <TouchableOpacity
+                      style={tailwind`ml-auto`}
+                      onPress={() => removeItem(index)}>
+                      <TrashIcon
+                        size={responsiveHeight(3)}
+                        color={'rgb(64 64 64)'}
+                      />
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </View>
-            </View>
-          )}
-        />
+            )}
+          />
+        )}
       </Animated.View>
       {cartData?.length > 0 && (
         <Animated.View

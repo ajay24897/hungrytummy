@@ -14,6 +14,7 @@ import axios from 'axios';
 import MasonryLayout from '../../components/masonryLayout';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useFocusEffect} from '@react-navigation/native';
+import LottieView from 'lottie-react-native';
 
 export default function SearchMeal({navigation}) {
   const [seachText, setSeachText] = useState('');
@@ -62,7 +63,9 @@ export default function SearchMeal({navigation}) {
           onPress={() => {
             setShowModal(true);
           }}>
-          <Text>Search meals</Text>
+          <Text style={tailwind`text-gray-500`}>
+            Search cake, pizza, eggs...
+          </Text>
         </TouchableOpacity>
 
         <Modal visible={showModal} transparent={true}>
@@ -76,6 +79,7 @@ export default function SearchMeal({navigation}) {
                 setMeals([]);
                 setSeachText('');
                 setShowModal(false);
+                setLoadingStatus({});
               }}
               style={tailwind`mt-5 ml-auto mr-5`}>
               <XMarkIcon size={responsiveHeight(3)} color={'#000'} />
@@ -86,8 +90,8 @@ export default function SearchMeal({navigation}) {
                 style={tailwind`bg-slate-200 px-3 py-4 justify-between items-center rounded-full flex-1 mr-2`}
                 value={seachText}
                 onChangeText={text => setSeachText(text)}
-                placeholder="Search meals"
-                placeholderTextColor={'#000'}
+                placeholder="Search cake, pizza, eggs..."
+                placeholderTextColor={'gray'}
                 onSubmitEditing={searchMealData}
               />
               <TouchableOpacity onPress={searchMealData}>
@@ -109,10 +113,52 @@ export default function SearchMeal({navigation}) {
 
             {!meals?.length &&
               !loadingStatus.loading &&
-              loadingStatus.hasLoadedOnce && <Text>No Meal found</Text>}
+              loadingStatus.hasLoadedOnce && (
+                <View style={[tailwind`flex-1 items-center`]}>
+                  <LottieView
+                    source={require('../../assets/lottie/cat.json')}
+                    autoPlay
+                    loop
+                    style={{
+                      width: '100%',
+                      height: responsiveHeight(30),
+                      marginTop: responsiveHeight(10),
+                    }}
+                  />
+                  <Text
+                    style={[
+                      tailwind`mt-10 text-2xl text-center text-amber-400`,
+                    ]}>
+                    Hmm No Meal found
+                  </Text>
+                  <Text style={[tailwind`mt-2 text-lg text-center `]}>
+                    Load up your tummy with yummy meals 😋
+                  </Text>
+                </View>
+              )}
 
             {!meals?.length && !loadingStatus.hasLoadedOnce && (
-              <Text>Search Meal</Text>
+              <View style={[tailwind`flex justify-center items-center`]}>
+                <LottieView
+                  source={require('../../assets/lottie/search_meal.json')}
+                  autoPlay
+                  loop
+                  style={{
+                    width: '100%',
+                    height: responsiveHeight(30),
+                    marginTop: responsiveHeight(10),
+                  }}
+                />
+                <Text
+                  style={[
+                    tailwind`mt-10 text-2xl text-center text-amber-400 font-bold`,
+                  ]}>
+                  Search Meals
+                </Text>
+                <Text style={[tailwind`mt-2 text-lg text-center `]}>
+                  Load up your tummy with yummy meals 😋
+                </Text>
+              </View>
             )}
           </View>
         </Modal>
