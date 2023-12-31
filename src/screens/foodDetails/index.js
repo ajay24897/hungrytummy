@@ -70,10 +70,17 @@ function FoodDetails(props) {
         <TouchableOpacity
           onPress={() => props.navigation.goBack()}
           style={[
-            tailwind`bg-slate-100 p-2 rounded-full absolute`,
+            tailwind`absolute`,
             {top: responsiveWidth(12), left: responsiveWidth(6), zIndex: 100},
           ]}>
-          <ArrowUturnLeftIcon size={responsiveHeight(3.5)} color={'#f59e0b'} />
+          <Animated.View
+            entering={FadeInUp.delay(500).duration(500)}
+            style={tailwind`bg-slate-100 p-2 rounded-full`}>
+            <ArrowUturnLeftIcon
+              size={responsiveHeight(3.5)}
+              color={'#f59e0b'}
+            />
+          </Animated.View>
         </TouchableOpacity>
 
         <Animated.Image
