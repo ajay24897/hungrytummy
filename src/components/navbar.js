@@ -39,10 +39,7 @@ function Navbar({navigation}) {
                 color={'#f59e0b'}
               />
               <Text
-                style={[
-                  tailwind`absolute text-base`,
-                  {top: '0%', left: '36%'},
-                ]}>
+                style={[tailwind`absolute text-sm`, {top: '0%', left: '36%'}]}>
                 {cartItemCount}
               </Text>
             </>

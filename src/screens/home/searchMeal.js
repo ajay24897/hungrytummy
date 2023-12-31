@@ -80,7 +80,7 @@ export default function SearchMeal({navigation}) {
             setShowModal(true);
           }}>
           <Text style={tailwind`text-gray-500`}>
-            Search cake, pizza, eggs...
+            Search cake, pizza, pasta...
           </Text>
         </TouchableOpacity>
 
@@ -101,7 +101,7 @@ export default function SearchMeal({navigation}) {
                 style={tailwind`bg-slate-200 px-3 py-4 justify-between items-center rounded-full flex-1 mr-2`}
                 value={seachText}
                 onChangeText={text => setSeachText(text)}
-                placeholder="Search cake, pizza, eggs..."
+                placeholder="Search cake, pizza, pasta..."
                 placeholderTextColor={'gray'}
                 onSubmitEditing={searchMealData}
               />
