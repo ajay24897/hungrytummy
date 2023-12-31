@@ -41,7 +41,7 @@ function Navbar({navigation}) {
               <Text
                 style={[
                   tailwind`absolute text-base`,
-                  {top: '0%', left: '35%'},
+                  {top: '0%', left: '36%'},
                 ]}>
                 {cartItemCount}
               </Text>

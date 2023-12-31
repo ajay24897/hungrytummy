@@ -6,6 +6,7 @@ import {responsiveWidth} from 'react-native-responsive-dimensions';
 import tailwind from 'twrnc';
 import Animated, {FadeInDown, FadeInUp} from 'react-native-reanimated';
 import MasonryLayout from '../../components/masonryLayout';
+import Loader from '../../components/loader';
 
 function Categories({navigation}) {
   const [categories, setCategories] = useState([]);
@@ -96,7 +97,7 @@ function Categories({navigation}) {
       </View>
       <Text style={[tailwind`text-xl m-2`]}>Meals</Text>
       {isLoading ? (
-        <ActivityIndicator />
+        <Loader />
       ) : (
         <MasonryLayout meals={meals} navigation={navigation} />
       )}

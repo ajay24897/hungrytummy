@@ -15,6 +15,7 @@ import MasonryLayout from '../../components/masonryLayout';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useFocusEffect} from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
+import Loader from '../../components/loader';
 
 export default function SearchMeal({navigation}) {
   const [seachText, setSeachText] = useState('');
@@ -140,7 +141,7 @@ export default function SearchMeal({navigation}) {
                 />
               </>
             )}
-            {loadingStatus.loading && <ActivityIndicator />}
+            {loadingStatus.loading && <Loader />}
 
             {!meals?.length &&
               !loadingStatus.loading &&
