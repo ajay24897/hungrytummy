@@ -22,6 +22,7 @@ import {
 
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {toINRString} from '../../utils/methods';
 
 function FoodDetails(props) {
   const {strMealThumb, strMeal, idMeal} = props.route.params;
@@ -98,7 +99,7 @@ function FoodDetails(props) {
             <Animated.Text
               entering={FadeInDown.delay(200).stiffness(500).duration(500)}
               style={tailwind`text-center text-2xl mb-2 font-bold`}>
-              ₹{(+idMeal.slice(-1) + 2) * 100}
+              {toINRString((+idMeal.slice(-1) + 2) * 100)}
             </Animated.Text>
           </>
           <View style={tailwind`flex-row justify-evenly mt-8 items-center`}>

@@ -12,6 +12,7 @@ import Animated, {FadeInDown, FadeInUp} from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {MinusIcon, PlusIcon, TrashIcon} from 'react-native-heroicons/solid';
 import LottieView from 'lottie-react-native';
+import {toINRString} from '../../utils/methods';
 
 export default function Cart(props) {
   const insets = useSafeAreaInsets();
@@ -95,7 +96,10 @@ export default function Cart(props) {
                   }>
                   <Image
                     resizeMode="contain"
-                    source={{uri: item.strMealThumb}}
+                    source={[
+                      tailwind`rounded-2xl bg-zinc-300`,
+                      {uri: item.strMealThumb},
+                    ]}
                     style={[
                       {
                         width: responsiveWidth(25),
@@ -109,7 +113,9 @@ export default function Cart(props) {
                   <Text style={tailwind`ml-4 text-lg`} numberOfLines={1}>
                     {item.strMeal}
                   </Text>
-                  <Text style={tailwind`ml-4 text-lg`}>₹{item.price}</Text>
+                  <Text style={tailwind`ml-4 text-lg`}>
+                    {toINRString(item.price)}
+                  </Text>
                   <View style={tailwind`flex-row ml-4 items-center mt-2`}>
                     <TouchableOpacity
                       style={tailwind`bg-amber-300 p-1 rounded-lg`}
@@ -151,17 +157,17 @@ export default function Cart(props) {
           ]}>
           <View style={tailwind`flex-row justify-between mb-2`}>
             <Text style={tailwind`text-sm`}>Subtotal</Text>
-            <Text style={tailwind`text-sm`}>₹{subtotal}</Text>
+            <Text style={tailwind`text-sm`}>{toINRString(subtotal)}</Text>
           </View>
           <View style={tailwind`flex-row justify-between mb-2`}>
             <Text style={tailwind` text-sm`}>Shipping charges</Text>
             <Text style={tailwind`text-sm`}>
-              {subtotal > 5000 ? 'Free' : '₹100'}
+              {subtotal > 5000 ? 'Free' : toINRString(100)}
             </Text>
           </View>
           <View style={tailwind`flex-row justify-between mb-2`}>
             <Text style={tailwind` text-sm`}>GST</Text>
-            <Text style={tailwind`text-sm`}>₹{GST} (5%)</Text>
+            <Text style={tailwind`text-sm`}>{toINRString(GST)} (5%)</Text>
           </View>
           <View
             style={[
@@ -170,7 +176,7 @@ export default function Cart(props) {
           />
           <View style={tailwind`flex-row justify-between mb-2`}>
             <Text style={tailwind` text-lg`}>Total</Text>
-            <Text style={tailwind`text-lg`}>₹{total}</Text>
+            <Text style={tailwind`text-lg`}>{toINRString(total)}</Text>
           </View>
           <TouchableOpacity
             style={[
