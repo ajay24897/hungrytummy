@@ -5,7 +5,10 @@ import {Bars3Icon} from 'react-native-heroicons/solid';
 import {ShoppingCartIcon} from 'react-native-heroicons/outline';
 import {ShoppingCartIcon as ShoppingCartIconSolid} from 'react-native-heroicons/solid';
 
-import {responsiveHeight} from 'react-native-responsive-dimensions';
+import {
+  responsiveHeight,
+  responsiveWidth,
+} from 'react-native-responsive-dimensions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect} from '@react-navigation/native';
 
@@ -33,16 +36,33 @@ function Navbar({navigation}) {
           onPress={() => navigation.navigate('Cart')}
           style={tailwind`mr-2`}>
           {cartItemCount > 0 ? (
-            <>
+            <View style={tailwind`flex-row relative`}>
               <ShoppingCartIconSolid
                 size={responsiveHeight(4)}
                 color={'#f59e0b'}
               />
-              <Text
-                style={[tailwind`absolute text-sm`, {top: '0%', left: '36%'}]}>
-                {cartItemCount}
-              </Text>
-            </>
+              <View
+                style={[
+                  tailwind`absolute text-sm bg-red-600 flex-row justify-center items-center`,
+                  {
+                    top: '-10%',
+                    left: '60%',
+                    borderRadius: responsiveWidth(4),
+                    minWidth: responsiveWidth(4),
+                    minHeight: responsiveWidth(4),
+                  },
+                ]}>
+                <Text
+                  style={[
+                    tailwind`text-white text-center`,
+                    {
+                      fontSize: responsiveWidth(3),
+                    },
+                  ]}>
+                  {cartItemCount}
+                </Text>
+              </View>
+            </View>
           ) : (
             <ShoppingCartIcon size={responsiveHeight(4)} color={'#f59e0b'} />
           )}
