@@ -161,10 +161,10 @@ export default function SearchMeal({navigation}) {
                     style={[
                       tailwind`mt-10 text-2xl text-center text-amber-400 font-bold`,
                     ]}>
-                    Oh, Meal not found
+                    oops, Meal not found
                   </Text>
                   <Text style={[tailwind`mt-2 text-lg text-center `]}>
-                    Load up your tummy with yummy meals 😋
+                    let's search some different meal
                   </Text>
                 </View>
               )}
