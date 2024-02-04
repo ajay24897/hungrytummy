@@ -183,7 +183,7 @@ export default function Cart(props) {
               tailwind`py-4 mb-5 text-center bg-amber-400 mx-auto rounded-full mt-2`,
               {width: '70%'},
             ]}
-            onPress={() => {}}>
+            onPress={() => props.navigation.push('OrderInProcess')}>
             <Text
               style={[
                 tailwind`text-center  font-medium`,
