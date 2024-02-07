@@ -54,13 +54,34 @@ export default function Cart(props) {
     await AsyncStorage.setItem('cart', JSON.stringify(data));
   }
 
+  async function placeOrder() {
+    let prevOrder = await AsyncStorage.getItem('orders');
+    if (prevOrder) {
+      await AsyncStorage.setItem(
+        'orders',
+        JSON.stringify([
+          ...JSON.parse(prevOrder),
+          {date: new Date(), cartData, total},
+        ]),
+      );
+    } else {
+      await AsyncStorage.setItem(
+        'orders',
+        JSON.stringify([{date: new Date(), cartData, total}]),
+      );
+    }
+    await AsyncStorage.removeItem('cart');
+
+    props.navigation.push('OrderInProcess');
+  }
+
   return (
     <View style={[tailwind`flex flex-1`]}>
       <Animated.View
         entering={FadeInUp.delay(400).duration(500).springify()}
         style={[tailwind`flex mx-4 flex-1 mt-${insets.top}px`]}>
         <Header
-          onBackPress={() => props.navigation.goBack()}
+          onBackPress={() => props.navigation.navigate('HomeScreen')}
           title={'Cart'}
           onPressMenu={() => props.navigation.openDrawer()}
         />
@@ -183,7 +204,7 @@ export default function Cart(props) {
               tailwind`py-4 mb-5 text-center bg-amber-400 mx-auto rounded-full mt-2`,
               {width: '70%'},
             ]}
-            onPress={() => props.navigation.push('OrderInProcess')}>
+            onPress={placeOrder}>
             <Text
               style={[
                 tailwind`text-center  font-medium`,
