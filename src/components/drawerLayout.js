@@ -13,7 +13,7 @@ function DrawerLayout(props) {
   return (
     <View style={tw`flex-1`}>
       <Text style={[tw`pt-10 text-2xl text-gray-700 mt-5 mx-5`]}>
-        Hi Foodie
+        Hey Foodie
       </Text>
 
       <View style={tw`mx-5 my-5`}>

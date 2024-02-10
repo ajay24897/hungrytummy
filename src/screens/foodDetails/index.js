@@ -23,10 +23,12 @@ import {
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {toINRString} from '../../utils/methods';
+import {useToast} from 'react-native-toast-notifications';
 
 function FoodDetails(props) {
   const {strMealThumb, strMeal, idMeal} = props.route.params;
   const [mealDetails, setMealDetails] = useState({});
+  const toast = useToast();
 
   useEffect(() => {
     getMealDetails();
@@ -57,6 +59,9 @@ function FoodDetails(props) {
 
     try {
       await AsyncStorage.setItem('cart', JSON.stringify(cartdetails));
+      toast.show('Meal added in cart successfully', {
+        type: 'success',
+      });
     } catch (e) {
       console.log(e);
       // saving error

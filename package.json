@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.21.0",
+    "@react-native-community/clipboard": "^1.5.1",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-native-seoul/masonry-list": "^1.4.2",
     "@react-navigation/drawer": "^6.6.6",
@@ -30,6 +31,7 @@
     "react-native-screens": "^3.29.0",
     "react-native-splash-screen": "^3.3.0",
     "react-native-svg": "^14.1.0",
+    "react-native-toast-notifications": "^3.4.0",
     "twrnc": "^3.6.6"
   },
   "devDependencies": {

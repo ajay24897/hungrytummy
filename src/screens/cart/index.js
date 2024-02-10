@@ -1,4 +1,14 @@
-import {View, Text, FlatList, Image, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  Image,
+  TouchableOpacity,
+  TextInput,
+  KeyboardAvoidingView,
+  Platform,
+  Keyboard,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import tailwind from 'twrnc';
@@ -13,18 +23,33 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {MinusIcon, PlusIcon, TrashIcon} from 'react-native-heroicons/solid';
 import LottieView from 'lottie-react-native';
 import {toINRString} from '../../utils/methods';
+import {useToast} from 'react-native-toast-notifications';
+import {CouponsList} from '../drawerMenu/coupons';
 
 export default function Cart(props) {
   const insets = useSafeAreaInsets();
 
   const [cartData, setCartData] = useState([]);
+  const [showApplyCouponInput, setShowApplyCouponInput] = useState(false);
+  const [couponCode, setCouponCode] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState('');
+
   const subtotal = cartData.reduce(
     (accumulator, item) => accumulator + item.count * item.price,
     0,
   );
-  const GST = subtotal * 0.05;
-  const shippingCharges = subtotal > 5000 ? 0 : 100;
-  const total = GST + subtotal + shippingCharges;
+  const couponDiscount =
+    appliedCoupon?.value && subtotal > appliedCoupon.cartValue
+      ? subtotal * (appliedCoupon?.value / 100)
+      : 0;
+
+  const finalSubTotal = subtotal - couponDiscount;
+  const toast = useToast();
+
+  const GST = finalSubTotal * 0.05;
+  const shippingCharges = finalSubTotal > 5000 ? 0 : 100;
+  const total = GST + finalSubTotal + shippingCharges;
+
   useEffect(() => {
     getCartData();
   }, []);
@@ -52,6 +77,9 @@ export default function Cart(props) {
     const data = cartData.filter((_, index) => index !== removeIndex);
     setCartData([...data]);
     await AsyncStorage.setItem('cart', JSON.stringify(data));
+    toast.show('Meal removed from cart successfully', {
+      type: 'danger',
+    });
   }
 
   async function placeOrder() {
@@ -75,8 +103,27 @@ export default function Cart(props) {
     props.navigation.push('OrderInProcess');
   }
 
+  function handleSubmitCoupon() {
+    let isCodeCorrect = CouponsList.findIndex(item => item.code === couponCode);
+    if (
+      couponCode &&
+      isCodeCorrect >= 0 &&
+      subtotal > CouponsList[isCodeCorrect].cartValue
+    ) {
+      setAppliedCoupon(CouponsList[isCodeCorrect]);
+    } else {
+      toast.show('Invalid coupon');
+      setAppliedCoupon();
+    }
+    setShowApplyCouponInput(false);
+    Keyboard.dismiss();
+  }
+
   return (
-    <View style={[tailwind`flex flex-1`]}>
+    // <View style={[tailwind`flex flex-1`]}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={[tailwind`flex flex-1`]}>
       <Animated.View
         entering={FadeInUp.delay(400).duration(500).springify()}
         style={[tailwind`flex mx-4 flex-1 mt-${insets.top}px`]}>
@@ -178,8 +225,20 @@ export default function Cart(props) {
           ]}>
           <View style={tailwind`flex-row justify-between mb-2`}>
             <Text style={tailwind`text-sm`}>Subtotal</Text>
-            <Text style={tailwind`text-sm`}>{toINRString(subtotal)}</Text>
+            {couponDiscount > 0 ? (
+              <View style={tailwind`flex-row`}>
+                <Text style={[tailwind`text-sm line-through	`]}>
+                  {toINRString(subtotal)}
+                </Text>
+                <Text style={[tailwind`text-sm ml-1`]}>
+                  {toINRString(subtotal - couponDiscount)}
+                </Text>
+              </View>
+            ) : (
+              <Text style={[tailwind`text-sm`]}>{toINRString(subtotal)}</Text>
+            )}
           </View>
+
           <View style={tailwind`flex-row justify-between mb-2`}>
             <Text style={tailwind` text-sm`}>Shipping charges</Text>
             <Text style={tailwind`text-sm`}>
@@ -190,6 +249,42 @@ export default function Cart(props) {
             <Text style={tailwind` text-sm`}>GST</Text>
             <Text style={tailwind`text-sm`}>{toINRString(GST)} (5%)</Text>
           </View>
+          {couponDiscount > 0 && (
+            <>
+              <View style={tailwind`flex-row justify-between`}>
+                <Text style={tailwind` text-sm`}>Coupon discount</Text>
+                <Text style={tailwind` text-sm`}>
+                  {toINRString(couponDiscount)} ({appliedCoupon.off})
+                </Text>
+              </View>
+              <Text style={tailwind` text-sm mb-2 text-rose-500`}>
+                Note: Discount is applied on subtotal amount
+              </Text>
+            </>
+          )}
+
+          {showApplyCouponInput ? (
+            <View style={tailwind`flex-row`}>
+              <TextInput
+                style={tailwind`border-2 border-slate-500 p-1 mb-2 rounded-md	flex-1`}
+                placeholder="Add coupon"
+                onChangeText={text => setCouponCode(text)}
+                value={couponCode}
+                onSubmitEditing={() => handleSubmitCoupon()}
+              />
+              <TouchableOpacity onPress={handleSubmitCoupon}>
+                <Text style={tailwind`text-base mx-2 text-amber-500`}>
+                  Apply
+                </Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <TouchableOpacity
+              style={tailwind`mb-2`}
+              onPress={() => setShowApplyCouponInput(true)}>
+              <Text style={tailwind`text-amber-500`}>Apply Coupon</Text>
+            </TouchableOpacity>
+          )}
           <View
             style={[
               {borderTopWidth: 1, marginVertical: 4, borderColor: 'grey'},
@@ -199,6 +294,7 @@ export default function Cart(props) {
             <Text style={tailwind` text-lg`}>Total</Text>
             <Text style={tailwind`text-lg`}>{toINRString(total)}</Text>
           </View>
+
           <TouchableOpacity
             style={[
               tailwind`py-4 mb-5 text-center bg-amber-400 mx-auto rounded-full mt-2`,
@@ -215,6 +311,6 @@ export default function Cart(props) {
           </TouchableOpacity>
         </Animated.View>
       )}
-    </View>
+    </KeyboardAvoidingView>
   );
 }

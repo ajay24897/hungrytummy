@@ -6,16 +6,13 @@ import {
   responsiveHeight,
 } from 'react-native-responsive-dimensions';
 import LottieView from 'lottie-react-native';
-import Animated, {FadeInUp} from 'react-native-reanimated';
 
 const lottiviewStyle = {width: '100%', height: responsiveHeight(30)};
 export default function OrderInProcess({navigation}) {
   const [state, setState] = useState('cooking');
 
   useEffect(() => {
-    BackHandler.addEventListener('hardwareBackPress', () => {
-      console.log('in');
-    });
+    BackHandler.addEventListener('hardwareBackPress', () => {});
     return () => BackHandler.removeEventListener('hardwareBackPress');
   }, []);
 

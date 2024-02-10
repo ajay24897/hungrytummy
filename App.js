@@ -4,6 +4,8 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import HomeRoute from './src/routes/home.route';
 import DrawerLayout from './src/components/drawerLayout';
 import SplashScreen from 'react-native-splash-screen';
+import {ToastProvider} from 'react-native-toast-notifications';
+import {responsiveFontSize} from 'react-native-responsive-dimensions';
 
 function App() {
   React.useEffect(() => {
@@ -11,9 +13,15 @@ function App() {
   }, []);
 
   return (
-    <NavigationContainer>
-      <DrawerNavigation />
-    </NavigationContainer>
+    <ToastProvider
+      offsetBottom={100}
+      placement="bottom"
+      animationType="slide-in"
+      textStyle={{fontSize: responsiveFontSize(2)}}>
+      <NavigationContainer>
+        <DrawerNavigation />
+      </NavigationContainer>
+    </ToastProvider>
   );
 }
 

@@ -43,6 +43,7 @@ const MyOrders = props => {
             <MealOrderView meal={item} index={index} />
           )}
           style={[tailwind`flex flex-1`]}
+          showsVerticalScrollIndicator={false}
         />
       </Animated.View>
     </View>
@@ -50,9 +51,8 @@ const MyOrders = props => {
 };
 
 function MealOrderView({meal, index}) {
-  console.log(meal);
   return (
-    <View style={[tailwind`flex`]}>
+    <View style={[tailwind`flex`]} key={meal.date}>
       <Animated.Text
         style={[tailwind`mb-2 text-base text-amber-600`]}
         entering={FadeInUp.delay(index * 500).springify()}>
